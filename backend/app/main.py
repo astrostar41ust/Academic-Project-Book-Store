@@ -1,21 +1,18 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+import os
+from flask import Flask
+from .libs.db import db
+from .routes.api import api_blueprint
 
-app = FastAPI()
+def create_app():
+    app = Flask(__name__)
+    
+    
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'app.db')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Configure CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"], # Allows all origins for simplicity. In production, you'd restrict this.
-    allow_credentials=True,
-    allow_methods=["*"], # Allows all methods
-    allow_headers=["*"], # Allows all headers
-)
+    db.init_app(app)
 
-@app.get("/api/message")
-def get_message():
-    return {"message": "Hello from the Python Backend!"}
+    app.register_blueprint(api_blueprint)
 
-@app.get("/")
-def read_root():
-    return {"status": "Backend is running"}
+    return app
