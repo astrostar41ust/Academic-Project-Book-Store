@@ -58,7 +58,7 @@ class Author(db.Model):
 
 
 class Book(db.Model):
-    id = db.Column(db.Integer, primart_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
     isbn = db.Column(db.String(13), nullable=False)
     price = db.Column(db.Float, nullable=False)
@@ -84,8 +84,8 @@ class Book(db.Model):
         return data
 
 
-class Order(db.model):
-    id = db.Column(db.integer, primary_key=True)
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     order_date = db.Column(db.DateTime, default=datetime.timezone.utc)
     total_amout = db.Column(db.Float, nullable=False)
