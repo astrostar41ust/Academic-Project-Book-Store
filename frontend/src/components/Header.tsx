@@ -1,14 +1,20 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext'; // Import CartContext
 
 const Header: React.FC = () => {
   const { isAuthenticated, user, logout } = useAuth();
+  const { cart } = useCart(); // Access cart from CartContext
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
     navigate('/');
+  };
+
+  const handleGoToCart = () => {
+    navigate('/cart'); // Navigate to the cart page
   };
 
   return (
@@ -29,6 +35,17 @@ const Header: React.FC = () => {
             <Link to="/authors" className="hover:text-blue-200 transition-colors">
               Authors
             </Link>
+            <button 
+              onClick={handleGoToCart} 
+              className="relative flex items-center border border-white px-3 py-1 rounded hover:bg-blue-500 transition-colors"
+            >
+              🛒<span className="ml-2">Cart</span>
+              {cart.length > 0 && (
+                <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-500 text-white text-xs rounded-full px-2 py-1">
+                  {cart.length}
+                </span>
+              )}
+            </button>
             
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">

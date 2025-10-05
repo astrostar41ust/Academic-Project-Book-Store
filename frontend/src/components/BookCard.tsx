@@ -1,4 +1,5 @@
 import React from 'react';
+import { useCart } from '../context/CartContext'; // Import useCart
 import type { Book } from '../types';
 
 interface BookCardProps {
@@ -7,6 +8,12 @@ interface BookCardProps {
 }
 
 const BookCard: React.FC<BookCardProps> = ({ book, onClick }) => {
+  const { addToCart } = useCart(); // Access addToCart from CartContext
+
+  const handleAddToCart = () => {
+    addToCart({ id: book.id, title: book.title, price: book.price, quantity: 1 });
+  };
+
   return (
     <div 
       className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer"
@@ -39,7 +46,7 @@ const BookCard: React.FC<BookCardProps> = ({ book, onClick }) => {
           className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition-colors"
           onClick={(e) => {
             e.stopPropagation();
-            // Add to cart functionality here
+            handleAddToCart(); // Add book to cart
           }}
         >
           Add to Cart
