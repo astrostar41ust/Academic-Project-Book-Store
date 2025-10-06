@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-import datetime
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -87,8 +87,8 @@ class Book(db.Model):
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    order_date = db.Column(db.DateTime, default=datetime.timezone.utc)
-    total_amout = db.Column(db.Float, nullable=False)
+    order_date = db.Column(db.DateTime, default=datetime.utcnow)
+    total_amount = db.Column(db.Float, nullable=False)
 
     status = db.Column(db.String(50), default="Pending")
 
@@ -109,7 +109,7 @@ class OrderItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     order_id = db.Column(db.Integer, db.ForeignKey("order.id"), nullable=False)
     book_id = db.Column(db.Integer, db.ForeignKey("book.id"), nullable=False)
-
+    quantity = db.Column(db.Integer, nullable=False, default=1)
     price_at_purchase = db.Column(db.Float, nullable=False)
 
     def to_dict(self):
