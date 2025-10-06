@@ -60,7 +60,6 @@ class Author(db.Model):
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
-    isbn = db.Column(db.String(13), nullable=False)
     price = db.Column(db.Float, nullable=False)
 
     file_url = db.Column(db.String(512), nullable=True)
@@ -74,7 +73,6 @@ class Book(db.Model):
         data = {
             "id": self.id,
             "title": self.title,
-            "isbn": self.isbn,
             "price": self.price,
             "authors": [a.to_dict() for a in self.authors],
         }

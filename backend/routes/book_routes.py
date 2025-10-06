@@ -27,7 +27,7 @@ def get_book(book_id):
 def create_book():
     data = request.get_json()
     
-    required_fields = ['title', 'isbn', 'price', 'file_url', ]
+    required_fields = ['title', 'price', 'file_url', ]
     if not all(field in data for field in required_fields):
         return jsonify({"msg": "Missing required fields"}), 400
     
@@ -37,7 +37,6 @@ def create_book():
     
     new_book = Book(
         title=data['title'],
-        isbn=data['isbn'],
         price=data['price'],
         file_url=data.get('file_url'),
         authors=authors
