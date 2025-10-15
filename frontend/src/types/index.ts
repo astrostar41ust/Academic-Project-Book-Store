@@ -28,6 +28,7 @@ export interface Book {
   stock_quantity: number;
   author_id: number;
   author?: Author;
+  img_url:string;
 }
 
 export interface AuthResponse {

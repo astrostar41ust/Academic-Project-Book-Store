@@ -8,8 +8,7 @@ book_bp = Blueprint('book_bp', __name__)
 @book_bp.route('/', methods=['GET'])
 def list_books():
     books = Book.query.all()
-    
-    return jsonify([book.to_dict() for book in books]), 200
+    return jsonify([book.to_dict(include_img_url=True) for book in books]), 200
 
 @book_bp.route('/<int:book_id>', methods=['GET'])
 def get_book(book_id):
@@ -27,7 +26,7 @@ def get_book(book_id):
 def create_book():
     data = request.get_json()
     
-    required_fields = ['title', 'price', 'file_url', ]
+    required_fields = ['title', 'price', 'file_url', 'img_url']
     if not all(field in data for field in required_fields):
         return jsonify({"msg": "Missing required fields"}), 400
     
@@ -39,6 +38,7 @@ def create_book():
         title=data['title'],
         price=data['price'],
         file_url=data.get('file_url'),
+        img_url=data.get('img_url'),
         authors=authors
     )
     
@@ -46,7 +46,7 @@ def create_book():
         db.session.add(new_book)
         db.session.commit()
         
-        return jsonify(new_book.to_dict(include_file_url=True)), 201
+        return jsonify(new_book.to_dict(include_file_url=True,include_img_url=True)), 201
     except Exception as e:
         db.session.rollback()
         return jsonify({"msg": "Error creating book", "error": str(e)}), 500
@@ -65,7 +65,7 @@ def update_book(book_id):
     book.title = data.get('title', book.title)
     book.price = data.get('price', book.price)
     book.file_url = data.get('file_url', book.file_url)
-    
+    book.img_url = data.get('img_url', book.img_url)
     
     if 'author_ids' in data:
         authors = Author.query.filter(Author.id.in_(data['author_ids'])).all()

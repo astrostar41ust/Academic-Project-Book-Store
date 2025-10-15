@@ -13,6 +13,7 @@ export const useBooks = () => {
       setError(null);
       const data = await booksAPI.getAll();
       setBooks(data);
+      
     } catch (err) {
       setError('Failed to fetch books');
       console.error('Error fetching books:', err);

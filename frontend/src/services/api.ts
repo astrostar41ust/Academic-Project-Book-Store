@@ -42,11 +42,13 @@ export const authAPI = {
 export const booksAPI = {
   getAll: async (): Promise<Book[]> => {
     const response = await api.get('/books/');
+    console.log(response)
     return response.data;
   },
 
   getById: async (id: number): Promise<Book> => {
     const response = await api.get(`/books/${id}`);
+    
     return response.data;
   },
 

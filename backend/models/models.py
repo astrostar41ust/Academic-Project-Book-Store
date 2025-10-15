@@ -63,24 +63,27 @@ class Book(db.Model):
     price = db.Column(db.Float, nullable=False)
 
     file_url = db.Column(db.String(512), nullable=True)
+    img_url = db.Column(db.String(512), nullable=True)
 
     authors = db.relationship(
         "Author", secondary=book_author_association, back_populates="books"
     )
     order_items = db.relationship("OrderItem", backref="book", lazy=True)
 
-    def to_dict(self, include_file_url=False):
+    def to_dict(self, include_file_url=False, include_img_url=False):
         data = {
             "id": self.id,
             "title": self.title,
             "price": self.price,
             "authors": [a.to_dict() for a in self.authors],
         }
-
         if include_file_url:
             data["file_url"] = self.file_url
+    
+        if include_img_url:
+            data["img_url"] = self.img_url
         return data
-
+        
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
