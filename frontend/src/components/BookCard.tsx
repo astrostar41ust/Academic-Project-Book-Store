@@ -33,11 +33,7 @@ const BookCard: React.FC<BookCardProps> = ({ book, onClick }) => {
         </h3>
         <span className="text-2xl font-bold text-blue-600">${book.price}</span>
       </div>
-
       <div className="space-y-2 text-gray-600">
-        <p>
-          <span className="font-medium">ISBN:</span> {book.isbn}
-        </p>
         {book.author && (
           <p>
             <span className="font-medium">Author:</span> {book.author.name}
