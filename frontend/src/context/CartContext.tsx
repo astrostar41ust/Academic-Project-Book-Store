@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 
 interface CartItem {
-  id: string;
+  id: number;
   title: string;
   price: number;
   quantity: number;
@@ -10,8 +10,8 @@ interface CartItem {
 interface CartContextType {
   cart: CartItem[];
   addToCart: (item: CartItem) => void;
-  removeFromCart: (id: string) => void;
-  decreaseQuantity: (id: string) => void; // Function to decrease quantity
+  removeFromCart: (id: number) => void;
+  decreaseQuantity: (id: number) => void; // Function to decrease quantity
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -33,11 +33,11 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
-  const removeFromCart = (id: string) => {
+  const removeFromCart = (id: number) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
   };
 
-  const decreaseQuantity = (id: string) => {
+  const decreaseQuantity = (id: number) => {
     setCart((prevCart) => {
       return prevCart
         .map((cartItem) =>
@@ -56,6 +56,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useCart = () => {
   const context = useContext(CartContext);
   if (!context) {
