@@ -1,22 +1,31 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { useCart } from '../context/CartContext'; // Import CartContext
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext"; // Import CartContext
 
 const Header: React.FC = () => {
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, token,user, logout,loading } = useAuth();
   const { cart } = useCart(); // Access cart from CartContext
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate("/");
   };
 
   const handleGoToCart = () => {
-    navigate('/cart'); // Navigate to the cart page
+    navigate("/cart"); // Navigate to the cart page
   };
-
+  useEffect(() => {
+    if (isAuthenticated == true) {
+      console.log(user);
+      console.log(token)
+      console.log(loading)
+      console.log(isAuthenticated)
+      console.log(user?.username);
+      console.log("Role is : ", user?.role);
+    }
+  }, [isAuthenticated, user]);
   return (
     <header className="bg-blue-600 text-white shadow-lg">
       <div className="container mx-auto px-4 py-4">
@@ -24,7 +33,7 @@ const Header: React.FC = () => {
           <Link to="/" className="text-2xl font-bold hover:text-blue-200">
             📚 BookStore
           </Link>
-          
+
           <div className="flex items-center space-x-4">
             <Link to="/" className="hover:text-blue-200 transition-colors">
               Home
@@ -32,11 +41,14 @@ const Header: React.FC = () => {
             <Link to="/books" className="hover:text-blue-200 transition-colors">
               Books
             </Link>
-            <Link to="/authors" className="hover:text-blue-200 transition-colors">
+            <Link
+              to="/authors"
+              className="hover:text-blue-200 transition-colors"
+            >
               Authors
             </Link>
-            <button 
-              onClick={handleGoToCart} 
+            <button
+              onClick={handleGoToCart}
               className="relative flex items-center border border-white px-3 py-1 rounded hover:bg-blue-500 transition-colors"
             >
               🛒<span className="ml-2">Cart</span>
@@ -46,19 +58,25 @@ const Header: React.FC = () => {
                 </span>
               )}
             </button>
-            
+
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
-                {user?.role.name === 'admin' && (
-                  <Link to="/admin" className="hover:text-blue-200 transition-colors">
+                {user?.role === "admin" && (
+                  <Link
+                    to="/admin"
+                    className="hover:text-blue-200 transition-colors"
+                  >
                     Admin Panel
                   </Link>
                 )}
-                <Link to="/profile" className="hover:text-blue-200 transition-colors">
+                <Link
+                  to="/profile"
+                  className="hover:text-blue-200 transition-colors"
+                >
                   Profile
                 </Link>
                 <span className="text-blue-200">Hello, {user?.username}!</span>
-                <button 
+                <button
                   onClick={handleLogout}
                   className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded transition-colors"
                 >
@@ -67,14 +85,14 @@ const Header: React.FC = () => {
               </div>
             ) : (
               <div className="flex items-center space-x-2">
-                <Link 
-                  to="/login" 
+                <Link
+                  to="/login"
                   className="bg-blue-500 hover:bg-blue-400 px-3 py-1 rounded transition-colors"
                 >
                   Login
                 </Link>
-                <Link 
-                  to="/register" 
+                <Link
+                  to="/register"
                   className="bg-green-500 hover:bg-green-400 px-3 py-1 rounded transition-colors"
                 >
                   Register

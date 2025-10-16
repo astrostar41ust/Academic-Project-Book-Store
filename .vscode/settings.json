@@ -1,5 +1,6 @@
 {
     "python.analysis.extraPaths": [
         "./backend/app"
-    ]
+    ],
+    "idf.pythonInstallPath": "/Users/ecbarm/.espressif/python_env/idf5.4_py3.13_env/bin/python"
 }
