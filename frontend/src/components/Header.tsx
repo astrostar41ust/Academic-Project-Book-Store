@@ -1,27 +1,55 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCart } from "../context/CartContext"; // Import CartContext
 
 const Header: React.FC = () => {
-  const { isAuthenticated, token,user, logout,loading } = useAuth();
+  const { isAuthenticated, token, user, logout, loading } = useAuth();
   const { cart } = useCart(); // Access cart from CartContext
   const navigate = useNavigate();
+  const [dropdownOpen, setDropdownOpen] = useState(false); // State for dropdown
+  const dropdownRef = useRef<HTMLDivElement>(null); // Ref for dropdown
 
   const handleLogout = () => {
     logout();
     navigate("/");
+    setDropdownOpen(false); // Close dropdown after logout
   };
 
   const handleGoToCart = () => {
     navigate("/cart"); // Navigate to the cart page
   };
+
+  const toggleDropdown = () => {
+    setDropdownOpen((prev) => !prev); // Toggle dropdown visibility
+  };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
+      setDropdownOpen(false); // Close dropdown if clicked outside
+    }
+  };
+
+  const handleDropdownLinkClick = () => {
+    setDropdownOpen(false); // Close dropdown after clicking a link
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   useEffect(() => {
     if (isAuthenticated == true) {
       console.log(user);
-      console.log(token)
-      console.log(loading)
-      console.log(isAuthenticated)
+      console.log(token);
+      console.log(loading);
+      console.log(isAuthenticated);
       console.log(user?.username);
       console.log("Role is : ", user?.role);
     }
@@ -61,27 +89,65 @@ const Header: React.FC = () => {
 
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
-                {user?.role === "admin" && (
-                  <Link
-                    to="/admin"
-                    className="hover:text-blue-200 transition-colors"
+                <div className="relative" ref={dropdownRef}>
+                  <span
+                    className="text-blue-200 cursor-pointer flex items-center"
+                    onClick={toggleDropdown}
                   >
-                    Admin Panel
-                  </Link>
-                )}
-                <Link
-                  to="/profile"
-                  className="hover:text-blue-200 transition-colors"
-                >
-                  Profile
-                </Link>
-                <span className="text-blue-200">Hello, {user?.username}!</span>
-                <button
-                  onClick={handleLogout}
-                  className="bg-red-500 hover:bg-red-600 px-3 py-1 rounded transition-colors"
-                >
-                  Logout
-                </button>
+                    Hello, {user?.username}!
+
+                    <svg
+                      className={`w-4 h-4 ml-1 transform transition-transform ${
+                        dropdownOpen ? "rotate-180" : "rotate-0"
+                      }`}
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </span>
+                  {dropdownOpen && (
+                    <div className="absolute bg-white text-black shadow-lg rounded mt-2">
+                      <ul className="py-2">
+                        {user?.role === "admin" && (
+                          <li>
+                            <Link
+                              to="/admin"
+                              className="block px-4 py-2 hover:bg-gray-200 transition-colors"
+                              onClick={handleDropdownLinkClick}
+                            >
+                              Admin Panel
+                            </Link>
+                          </li>
+                        )}
+                        <li>
+                          <Link
+                            to="/profile"
+                            className="block px-4 py-2 hover:bg-gray-200 transition-colors"
+                            onClick={handleDropdownLinkClick}
+                          >
+                            Profile
+                          </Link>
+                        </li>
+                        <li>
+                          <button
+                            onClick={handleLogout}
+                            className="block w-full text-left px-4 py-2 hover:bg-gray-200 transition-colors"
+                          >
+                            Logout
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  )}
+                </div>
               </div>
             ) : (
               <div className="flex items-center space-x-2">
