@@ -1,27 +1,27 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { useCart } from "../context/CartContext"; // Import CartContext
+import { useCart } from "../context/CartContext";
 
 const Header: React.FC = () => {
-  const { isAuthenticated, token, user, logout, loading } = useAuth();
-  const { cart } = useCart(); // Access cart from CartContext
+  const { isAuthenticated, user, logout, } = useAuth();
+  const { cart } = useCart();
   const navigate = useNavigate();
-  const [dropdownOpen, setDropdownOpen] = useState(false); // State for dropdown
-  const dropdownRef = useRef<HTMLDivElement>(null); // Ref for dropdown
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleLogout = () => {
     logout();
     navigate("/");
-    setDropdownOpen(false); // Close dropdown after logout
+    setDropdownOpen(false);
   };
 
   const handleGoToCart = () => {
-    navigate("/cart"); // Navigate to the cart page
+    navigate("/cart");
   };
 
   const toggleDropdown = () => {
-    setDropdownOpen((prev) => !prev); // Toggle dropdown visibility
+    setDropdownOpen((prev) => !prev);
   };
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -29,12 +29,12 @@ const Header: React.FC = () => {
       dropdownRef.current &&
       !dropdownRef.current.contains(event.target as Node)
     ) {
-      setDropdownOpen(false); // Close dropdown if clicked outside
+      setDropdownOpen(false);
     }
   };
 
   const handleDropdownLinkClick = () => {
-    setDropdownOpen(false); // Close dropdown after clicking a link
+    setDropdownOpen(false);
   };
 
   useEffect(() => {
@@ -44,18 +44,8 @@ const Header: React.FC = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (isAuthenticated == true) {
-      console.log(user);
-      console.log(token);
-      console.log(loading);
-      console.log(isAuthenticated);
-      console.log(user?.username);
-      console.log("Role is : ", user?.role);
-    }
-  }, [isAuthenticated, user]);
   return (
-    <header className="bg-blue-600 text-white shadow-lg">
+    <header className="bg-blue-600 text-white shadow-lg fixed top-0 left-0 w-full z-[9999]">
       <div className="container mx-auto px-4 py-4">
         <nav className="flex items-center justify-between">
           <Link to="/" className="text-2xl font-bold hover:text-blue-200">
@@ -63,18 +53,7 @@ const Header: React.FC = () => {
           </Link>
 
           <div className="flex items-center space-x-4">
-            <Link to="/" className="hover:text-blue-200 transition-colors">
-              Home
-            </Link>
-            <Link to="/books" className="hover:text-blue-200 transition-colors">
-              Books
-            </Link>
-            <Link
-              to="/authors"
-              className="hover:text-blue-200 transition-colors"
-            >
-              Authors
-            </Link>
+            {/* Cart Button */}
             <button
               onClick={handleGoToCart}
               className="relative flex items-center border border-white px-3 py-1 rounded hover:bg-blue-500 transition-colors"
@@ -87,6 +66,7 @@ const Header: React.FC = () => {
               )}
             </button>
 
+            {/* User Dropdown */}
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
                 <div className="relative" ref={dropdownRef}>
@@ -95,7 +75,6 @@ const Header: React.FC = () => {
                     onClick={toggleDropdown}
                   >
                     Hello, {user?.username}!
-
                     <svg
                       className={`w-4 h-4 ml-1 transform transition-transform ${
                         dropdownOpen ? "rotate-180" : "rotate-0"
@@ -113,8 +92,10 @@ const Header: React.FC = () => {
                       />
                     </svg>
                   </span>
+
+                  {/* ✅ Dropdown Always on Top */}
                   {dropdownOpen && (
-                    <div className="absolute bg-white text-black shadow-lg rounded mt-2">
+                    <div className="absolute bg-white text-black shadow-lg rounded mt-2 z-[99999]">
                       <ul className="py-2">
                         {user?.role === "admin" && (
                           <li>
@@ -127,6 +108,7 @@ const Header: React.FC = () => {
                             </Link>
                           </li>
                         )}
+
                         <li>
                           <Link
                             to="/profile"
@@ -136,10 +118,11 @@ const Header: React.FC = () => {
                             Profile
                           </Link>
                         </li>
+
                         <li>
                           <button
                             onClick={handleLogout}
-                            className="block w-full text-left px-4 py-2 hover:bg-gray-200 transition-colors"
+                            className="block w-full text-left px-4 py-2 hover:bg-red-200 transition-colors"
                           >
                             Logout
                           </button>
