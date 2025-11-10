@@ -29,6 +29,30 @@ def create_author():
         db.session.rollback()
         return jsonify({"msg": "Error creating author", "error": str(e)}), 500
     
+    
+@author_bp.route('/<int:author_id>', methods=['DELETE'])
+@jwt_required()
+@requires_roles('admin')
+def delete_author(author_id):
+    author = db.session.get(Author, author_id)
+    
+    if not author:
+        return jsonify({"msg": "Author not found"}), 404
+    
+    try:
+        db.session.delete(author)
+        db.session.commit()
+        return jsonify({"msg": "Author deleted"}), 204
+    except Exception as e:
+        db.session.rollback()
+    
+        if 'IntegrityError' in str(e) or 'FOREIGN KEY constraint failed' in str(e):
+             return jsonify({
+                 "msg": "Cannot delete author: Books are still associated.",
+                 "error": "Please delete or reassign the author's books first."
+             }), 409 
+        return jsonify({"msg": "Error deleting author", "error": str(e)}), 500
+    
 @author_bp.route("/", methods=["GET"])
 def list_authors():
     authors = Author.query.all()

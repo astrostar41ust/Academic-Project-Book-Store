@@ -8,7 +8,7 @@ const Cart: React.FC = () => {
   const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
-    <div className="container mx-auto px-4 py-4">
+    <div className="container mx-auto px-4 py-4 pt-[150px]">
       <h2 className="text-2xl font-bold mb-4">Your Cart</h2>
       {cart.length === 0 ? (
         <p>Your cart is empty.</p>

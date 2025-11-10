@@ -25,7 +25,7 @@ const BooksPage: React.FC = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 pt-[150px]">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-800">All Books</h1>
         <div className="flex items-center space-x-4">
