@@ -2,6 +2,7 @@ import React from 'react';
 import { useBooks } from '../hooks/useBooks';
 import BookCard from '../components/BookCard';
 import LoadingSpinner from '../components/LoadingSpinner';
+import Card from '../components/Card/Card'
 
 const HomePage: React.FC = () => {
   const { books, loading, error } = useBooks();
@@ -34,6 +35,7 @@ const HomePage: React.FC = () => {
       <section className="mb-12">
         <h2 className="text-2xl font-semibold text-gray-800 mb-6">Featured Books</h2>
         
+        <Card></Card>
         {books.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">No books available at the moment.</p>
