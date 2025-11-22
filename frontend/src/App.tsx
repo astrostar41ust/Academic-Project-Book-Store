@@ -11,6 +11,9 @@ import BooksPage from './pages/BooksPage';
 import BookDetailPage from './pages/BookDetailPage';
 import AuthorsPage from './pages/AuthorsPage';
 import AuthorBooksPage from './pages/AuthorBooksPage';
+import ProfilePage from './pages/ProfilePage';
+import CheckoutPage from './pages/CheckoutPage';
+import OrderSuccessPage from './pages/OrderSuccessPage';
 import Cart from './components/Cart';
 
 const App: React.FC = () => {
@@ -30,7 +33,10 @@ const App: React.FC = () => {
                 <Route path="/books/:id" element={<BookDetailPage />} />
                 <Route path="/authors" element={<AuthorsPage />} />
                 <Route path="/authors/:id/books" element={<AuthorBooksPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout" element={<CheckoutPage />} />
+                <Route path="/order-success" element={<OrderSuccessPage />} />
               </Routes>
             </main>
           </div>

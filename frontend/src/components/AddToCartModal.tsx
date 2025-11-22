@@ -48,7 +48,7 @@ const AddToCartModal: React.FC<AddToCartModalProps> = ({ isOpen, onClose, bookTi
           </div>
 
           {/* Message */}
-          <h3 className="text-xl font-bold text-gray-800 mb-2">เพิ่มสินค้าลงตะกร้าเรียบร้อยแล้ว</h3>
+          <h3 className="text-xl font-bold text-gray-800 mb-2">Add to cart successfully</h3>
           <p className="text-sm text-gray-600 line-clamp-2">{bookTitle}</p>
         </div>
       </div>

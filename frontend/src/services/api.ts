@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Book, Author, User, AuthResponse } from '../types';
+import type { Book, Author, User, AuthResponse, Address } from '../types';
 
 const API_BASE_URL = 'http://127.0.0.1:5000/api';
 
@@ -46,6 +46,11 @@ export const booksAPI = {
     return response.data;
   },
 
+  getRecommended: async (): Promise<Book[]> => {
+    const response = await api.get('/books/recommended');
+    return response.data;
+  },
+
   getById: async (id: number): Promise<Book> => {
     const response = await api.get(`/books/${id}`);
     
@@ -81,6 +86,38 @@ export const authorsAPI = {
 
   create: async (author: Omit<Author, 'id'>): Promise<Author> => {
     const response = await api.post('/authors/', author);
+    return response.data;
+  },
+};
+
+// Address API
+export const addressAPI = {
+  getAll: async (): Promise<Address[]> => {
+    const response = await api.get('/addresses');
+    return response.data;
+  },
+
+  getById: async (id: number): Promise<Address> => {
+    const response = await api.get(`/addresses/${id}`);
+    return response.data;
+  },
+
+  create: async (address: Omit<Address, 'id' | 'user_id' | 'created_at'>): Promise<Address> => {
+    const response = await api.post('/addresses', address);
+    return response.data;
+  },
+
+  update: async (id: number, address: Partial<Omit<Address, 'id' | 'user_id' | 'created_at'>>): Promise<Address> => {
+    const response = await api.put(`/addresses/${id}`, address);
+    return response.data;
+  },
+
+  delete: async (id: number): Promise<void> => {
+    await api.delete(`/addresses/${id}`);
+  },
+
+  setDefault: async (id: number): Promise<Address> => {
+    const response = await api.put(`/addresses/${id}/set-default`);
     return response.data;
   },
 };
