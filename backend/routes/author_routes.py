@@ -53,6 +53,7 @@ def delete_author(author_id):
              }), 409 
         return jsonify({"msg": "Error deleting author", "error": str(e)}), 500
     
+
 @author_bp.route("/", methods=["GET"])
 def list_authors():
     authors = Author.query.all()

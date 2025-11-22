@@ -10,35 +10,27 @@ import TeamAvatar from "./team-avatar";
 
 export const items: SidebarItem[] = [
   {
-    key: "Allbook",
+    key: "Book",
     href: "/bookpage",
     icon: "solar:home-2-linear",
-    title: "Allbook",
+    title: "Book",
   },
   {
-    key: "projects",
-    href: "#",
+    key: "Authors",
+    href: "/authors",
     icon: "solar:widget-2-outline",
-    title: "Projects",
+    title: "Authors",
     endContent: (
       <Icon className="text-default-400" icon="solar:add-circle-line-duotone" width={24} />
     ),
   },
   {
-    key: "tasks",
-    href: "#",
+    key: "Banner",
+    href: "/banner",
     icon: "solar:checklist-minimalistic-outline",
-    title: "Tasks",
-    endContent: (
-      <Icon className="text-default-400" icon="solar:add-circle-line-duotone" width={24} />
-    ),
+    title: "Banner",
   },
-  {
-    key: "team",
-    href: "#",
-    icon: "solar:users-group-two-rounded-outline",
-    title: "Team",
-  },
+  
   {
     key: "tracker",
     href: "#",

@@ -21,8 +21,8 @@ def get_book(book_id):
 
 
 @book_bp.route('/', methods=['POST'])
-@jwt_required()
-@requires_roles('admin')
+# @jwt_required()
+# @requires_roles('admin')
 def create_book():
     data = request.get_json()
     
