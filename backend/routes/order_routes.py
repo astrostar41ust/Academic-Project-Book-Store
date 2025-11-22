@@ -59,6 +59,12 @@ def place_order():
             if not book:
                 return jsonify({"msg": f"Book with ID {book_id} not found"}), 404
 
+            # Check stock availability
+            if book.stock_quantity < quantity:
+                return jsonify({
+                    "msg": f"Insufficient stock for '{book.title}'. Available: {book.stock_quantity}, Requested: {quantity}"
+                }), 400
+
             price = book.price
             total_amount = price * quantity
             calculate_total += total_amount
@@ -68,6 +74,9 @@ def place_order():
             )
 
             order_items.append(order_item)
+            
+            # Reduce stock quantity
+            book.stock_quantity -= quantity
 
         new_order.total_amount = calculate_total
         new_order.items = order_items

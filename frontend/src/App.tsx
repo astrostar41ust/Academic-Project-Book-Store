@@ -8,7 +8,10 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import BooksPage from './pages/BooksPage';
-import Cart from './components/Cart'; // Import Cart
+import BookDetailPage from './pages/BookDetailPage';
+import AuthorsPage from './pages/AuthorsPage';
+import AuthorBooksPage from './pages/AuthorBooksPage';
+import Cart from './components/Cart';
 
 const App: React.FC = () => {
   return (
@@ -24,8 +27,10 @@ const App: React.FC = () => {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/books" element={<BooksPage />} />
-                <Route path="/cart" element={<Cart />} /> {/* Add Cart route */}
-                {/* Add more routes as needed */}
+                <Route path="/books/:id" element={<BookDetailPage />} />
+                <Route path="/authors" element={<AuthorsPage />} />
+                <Route path="/authors/:id/books" element={<AuthorBooksPage />} />
+                <Route path="/cart" element={<Cart />} />
               </Routes>
             </main>
           </div>

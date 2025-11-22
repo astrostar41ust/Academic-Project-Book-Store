@@ -17,18 +17,21 @@ export interface Author {
   name: string;
   biography?: string;
   birth_date?: string;
+  book_count?: number;
 }
 
 export interface Book {
   id: number;
   title: string;
-  isbn: string;
+  isbn?: string;
   price: number;
   publication_date: string;
   stock_quantity: number;
-  author_id: number;
+  author_id?: number;
   author?: Author;
-  img_url:string;
+  authors?: Author[];
+  img_url: string;
+  file_url?: string;
 }
 
 export interface AuthResponse {

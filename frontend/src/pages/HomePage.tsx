@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useBooks } from '../hooks/useBooks';
 import BookCard from '../components/BookCard';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -22,6 +23,7 @@ const bannerImages = [
 const HomePage: React.FC = () => {
   const { books, loading, error } = useBooks();
   const [bannerIndex, setBannerIndex] = useState(0);
+  const navigate = useNavigate();
 
   // Auto-slide effect
   useEffect(() => {
@@ -95,9 +97,7 @@ const HomePage: React.FC = () => {
                   <BookCard 
                     key={book.id} 
                     book={book}
-                    onClick={() => {
-                      console.log('Navigate to book:', book.id);
-                    }}
+                    onClick={() => navigate(`/books/${book.id}`)}
                   />
                 ))}
               </div>
@@ -106,7 +106,10 @@ const HomePage: React.FC = () => {
 
           {books.length > 8 && (
             <div className="text-center">
-              <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition-colors">
+              <button 
+                onClick={() => navigate('/books')}
+                className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition-colors"
+              >
                 View All Books
               </button>
             </div>

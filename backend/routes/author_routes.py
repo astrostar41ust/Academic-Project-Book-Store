@@ -57,7 +57,12 @@ def delete_author(author_id):
 @author_bp.route("/", methods=["GET"])
 def list_authors():
     authors = Author.query.all()
-    return jsonify([author.to_dict() for author in authors]), 200
+    authors_data = []
+    for author in authors:
+        author_dict = author.to_dict()
+        author_dict['book_count'] = len(author.books)
+        authors_data.append(author_dict)
+    return jsonify(authors_data), 200
 
 
 @author_bp.route("/<int:author_id>", methods=["GET"])
@@ -67,9 +72,10 @@ def get_author_profile(author_id):
     if not author:
         return jsonify({"msg": "Author not found"}), 404
     
-    books_data = [book.to_dict() for book in author.books]
+    books_data = [book.to_dict(include_img_url=True) for book in author.books]
     
     profile_data = author.to_dict()
+    profile_data['book_count'] = len(author.books)
     profile_data['books_written'] = books_data
     
     return jsonify(profile_data), 200

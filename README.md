@@ -278,3 +278,106 @@ This project is for academic purposes.
 **Happy Coding! 🚀**
 
 For questions or issues, please create an issue in the GitHub repository.
+
+---
+
+
+
+
+**For temp Backend schema**
+
+## 📡 Backend API Quick Reference
+
+### 🔐 Authentication
+
+**POST** `/api/auth/register`
+```json
+{
+  "username": "string (required)",
+  "email": "string (required)",
+  "password": "string (required)"
+}
+```
+
+**POST** `/api/auth/login`
+```json
+{
+  "username": "string (required)",
+  "password": "string (required)"
+}
+```
+
+---
+
+### 📚 Books
+
+**POST** `/api/books/` ⚠️ **Admin Only**  
+**Headers:** `Authorization: Bearer <token>`
+```json
+{
+  "title": "string (required)",
+  "price": "float (required)",
+  "file_url": "string (required)",
+  "img_url": "string (required)",
+  "author_ids": "array[int] (required)",
+  "stock_quantity": "int (optional, default=0)",
+  "publication_date": "string YYYY-MM-DD (optional)"
+}
+```
+
+**PUT** `/api/books/<int:book_id>` ⚠️ **Admin Only**  
+**Headers:** `Authorization: Bearer <token>`
+```json
+{
+  "title": "string (optional)",
+  "price": "float (optional)",
+  "file_url": "string (optional)",
+  "img_url": "string (optional)",
+  "author_ids": "array[int] (optional)",
+  "stock_quantity": "int (optional)",
+  "publication_date": "string YYYY-MM-DD (optional)"
+}
+```
+
+---
+
+### 👥 Authors
+
+**GET** `/api/authors/`  
+**Response:** Array of authors with `book_count`
+
+**GET** `/api/authors/<int:author_id>`  
+**Response:** Author details with books array (includes `img_url`)
+
+**POST** `/api/authors/` ⚠️ **Admin Only**  
+**Headers:** `Authorization: Bearer <token>`
+```json
+{
+  "first_name": "string (required)",
+  "last_name": "string (required)"
+}
+```
+
+---
+
+### 🛍️ Orders
+
+**GET** `/api/orders/` 🔒 **Login Required**  
+**Headers:** `Authorization: Bearer <token>`  
+**Response:** User's orders
+
+**POST** `/api/orders/` 🔒 **Login Required**  
+**Headers:** `Authorization: Bearer <token>`
+```json
+{
+  "items": [
+    {
+      "book_id": "int (required)",
+      "quantity": "int (required)"
+    }
+  ]
+}
+```
+> **Note:** จะตรวจสอบ stock และลด stock อัตโนมัติ
+
+---
