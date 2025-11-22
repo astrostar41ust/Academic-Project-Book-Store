@@ -40,5 +40,5 @@ tmp/
 
 # Data files (if not meant for version control)
 *.csv
-*.json
+
 *.sqlite3
