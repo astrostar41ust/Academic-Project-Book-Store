@@ -61,6 +61,10 @@ class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255), nullable=False)
     price = db.Column(db.Float, nullable=False)
+    
+    # Inventory management
+    stock_quantity = db.Column(db.Integer, default=0, nullable=False)
+    publication_date = db.Column(db.Date, nullable=True)
 
     file_url = db.Column(db.String(512), nullable=True)
     img_url = db.Column(db.String(512), nullable=True)
@@ -75,6 +79,8 @@ class Book(db.Model):
             "id": self.id,
             "title": self.title,
             "price": self.price,
+            "stock_quantity": self.stock_quantity,
+            "publication_date": self.publication_date.isoformat() if self.publication_date else None,
             "authors": [a.to_dict() for a in self.authors],
         }
         if include_file_url:

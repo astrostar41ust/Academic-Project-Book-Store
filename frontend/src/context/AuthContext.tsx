@@ -122,6 +122,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = () => {
     localStorage.removeItem('token');
+    
+    // Don't delete user cart from localStorage - just logout
+    // Cart will be loaded back when user logs in again
+    
     dispatch({ type: 'LOGOUT' });
   };
 
