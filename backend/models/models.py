@@ -4,7 +4,6 @@ from datetime import datetime
 
 db = SQLAlchemy()
 
-
 class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=True, nullable=False)
@@ -34,7 +33,10 @@ class User(db.Model):
             "id": self.id,
             "username": self.username,
             "email": self.email,
-            "role": self.role.name,
+            "role": {
+                "id": self.role.id,
+                "name": self.role.name,
+            }
         }
 
 
@@ -49,12 +51,22 @@ class Author(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
+    image_url = db.Column(db.String(255))
+    
     books = db.relationship(
-        "Book", secondary=book_author_association, back_populates="authors"
+        "Book",
+        secondary=book_author_association,
+        back_populates="authors"
     )
 
     def to_dict(self):
-        return {"id": self.id, "name": f"{self.first_name} {self.last_name}"}
+        return {
+            "id": self.id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "name": f"{self.first_name} {self.last_name}",
+            "image_url": self.image_url
+        }
 
 
 class Book(db.Model):

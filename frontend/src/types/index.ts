@@ -18,6 +18,7 @@ export interface Author {
   biography?: string;
   birth_date?: string;
   book_count?: number;
+  image_url?: string;
 }
 
 export interface Book {

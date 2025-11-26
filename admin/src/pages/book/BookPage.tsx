@@ -19,6 +19,7 @@ const BookPage: React.FC = () => {
   useEffect(() => {
     const fetchAuthors = async () => {
       const res = await authorsAPI.getAll();
+
       setAuthors(res);
     };
 
@@ -102,7 +103,6 @@ const BookPage: React.FC = () => {
         icon: "success",
         showCancelButton: false,
         confirmButtonText: "สำเร็จ",
-        
       });
 
       getBooks();
@@ -131,40 +131,48 @@ const BookPage: React.FC = () => {
 
   return (
     <div>
-      <Button
-        className="flex justify-center items-center"
-        onClick={handleAddBook}
-        variant="outline"
-      >
-        + เพิ่มหนังสือ
-      </Button>
-      <div className="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 ">
-        {books.map((book) => (
-          <div
-            key={book.id}
-            className="border rounded-lg p-4 shadow hover:shadow-lg"
-          >
-            <img
-              src={book.img_url}
-              alt={book.title}
-              className="w-full h-60 object-cover rounded-md mb-3"
-            />
-            <h3 className="text-lg font-semibold">{book.title}</h3>
-            <p className="text-gray-500 text-sm">
-              by {book.authors.map((a) => a.name).join(", ")}
-            </p>
-            <p className="text-blue-600 font-bold mt-2">
-              ${book.price.toFixed(2)}
-            </p>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">รายชื่อหนังสือ</h1>
 
-            <Button
-              className="mt-3 w-full bg-red-500 text-white"
-              onClick={() => handleDeleteBook(book.id, book.title)}
-            >
-              ลบหนังสือ
-            </Button>
+        <Button className="flex justify-center items-center" onClick={handleAddBook} variant="outline">
+          + เพิ่มหนังสือ
+        </Button>
+      </div>
+      <div className="p-6">
+        {books && books.length === 0 ? (
+          <p className="text-center text-gray-500 text-xl py-10">
+            📚 ไม่มีหนังสือในระบบ
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {books.map((book) => (
+              <div
+                key={book.id}
+                className="border rounded-lg p-4 shadow hover:shadow-lg"
+              >
+                <img
+                  src={book.img_url}
+                  alt={book.title}
+                  className="w-full h-60 object-cover rounded-md mb-3"
+                />
+                <h3 className="text-lg font-semibold">{book.title}</h3>
+                <p className="text-gray-500 text-sm">
+                  by {book.authors.map((a) => a.name).join(", ")}
+                </p>
+                <p className="text-blue-600 font-bold mt-2">
+                  ${book.price.toFixed(2)}
+                </p>
+
+                <Button
+                  className="mt-3 w-full bg-red-500 text-white"
+                  onClick={() => handleDeleteBook(book.id, book.title)}
+                >
+                  ลบหนังสือ
+                </Button>
+              </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

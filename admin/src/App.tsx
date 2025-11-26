@@ -12,16 +12,19 @@ import SideBar from "./components/sidebar/earth";
 import BooksPage from "./pages/book/BookPage";
 import BookProvider from "./context/BookContext";
 import LoginPage from "./pages/auth/LoginPage";
+import AuthorPage from "./pages/author/AuthorPage";
+import UserManage from "./pages/user_manage/UserManage";
+import Profile from "./pages/user_manage/Profile";
 
 function AppRoutes() {
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   return (
     <Routes>
       <Route
         path="/"
         element={
-          token ? (
+          isAuthenticated ? (
             <Navigate to="/bookpage" replace />
           ) : (
             <Navigate to="/login" replace />
@@ -31,7 +34,9 @@ function AppRoutes() {
 
       <Route
         path="/login"
-        element={token ? <Navigate to="/bookpage" replace /> : <LoginPage />}
+        element={
+          isAuthenticated ? <Navigate to="/bookpage" replace /> : <LoginPage />
+        }
       />
 
       <Route
@@ -42,6 +47,36 @@ function AppRoutes() {
               <BookProvider>
                 <BooksPage />
               </BookProvider>
+            </SideBar>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/authors"
+        element={
+          <ProtectedRoute>
+            <SideBar>
+              <AuthorPage />
+            </SideBar>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/usermanage"
+        element={
+          <ProtectedRoute>
+            <SideBar>
+              <UserManage />
+            </SideBar>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <SideBar>
+              <Profile />
             </SideBar>
           </ProtectedRoute>
         }

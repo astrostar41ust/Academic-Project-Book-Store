@@ -1,12 +1,5 @@
 // Types definitions for the BookStore application
 
-export interface User {
-  id: number;
-  username: string;
-  email: string;
-  role: string;
-}
-
 export interface Role {
   id: number;
   name: "admin" | "customer";
@@ -17,6 +10,7 @@ export interface Author {
   name: string;
   biography?: string;
   birth_date?: string;
+  image_url?: string;
 }
 
 export interface Book {
@@ -33,6 +27,15 @@ export interface Book {
 export interface AuthResponse {
   access_token: string;
   user: User;
+}
+export interface User {
+  id: number;
+  username: string;
+  email: string;
+  role: {
+    id: number;
+    name: string;
+  };
 }
 
 export interface ApiResponse<T> {

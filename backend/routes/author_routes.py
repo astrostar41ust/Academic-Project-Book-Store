@@ -8,17 +8,18 @@ author_bp = Blueprint("author_bp", __name__)
 
 @author_bp.route("/", methods=["POST"])
 @jwt_required()
-@requires_roles("admin")
+@requires_roles("admin", "superadmin") 
 def create_author():
     data = request.get_json()
 
     first_name = data.get("first_name")
     last_name = data.get("last_name")
+    image_url = data.get("image_url") 
 
     if not all([first_name, last_name]):
         return jsonify({"msg": "Missing required fields"}), 400
 
-    new_author = Author(first_name=first_name, last_name=last_name)
+    new_author = Author(first_name=first_name, last_name=last_name, image_url=image_url )
     
     try:
         db.session.add(new_author)
@@ -32,7 +33,7 @@ def create_author():
     
 @author_bp.route('/<int:author_id>', methods=['DELETE'])
 @jwt_required()
-@requires_roles('admin')
+@requires_roles("admin", "superadmin") 
 def delete_author(author_id):
     author = db.session.get(Author, author_id)
     

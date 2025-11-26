@@ -22,8 +22,8 @@ def get_book(book_id):
 
 
 @book_bp.route('/', methods=['POST'])
-# @jwt_required()
-# @requires_roles('admin')
+@jwt_required()
+@requires_roles("admin", "superadmin") 
 def create_book():
     data = request.get_json()
     
@@ -64,7 +64,7 @@ def create_book():
     
 @book_bp.route('/<int:book_id>', methods=['PUT'])
 @jwt_required()
-@requires_roles('admin')
+@requires_roles("admin", "superadmin") 
 def update_book(book_id):
     book = db.session.get(Book, book_id)
     
@@ -101,7 +101,7 @@ def update_book(book_id):
     
 @book_bp.route('/<int:book_id>', methods=['DELETE'])
 @jwt_required()
-@requires_roles('admin')
+@requires_roles("admin", "superadmin") 
 def delete_book(book_id):
     book = db.session.get(Book, book_id)
     

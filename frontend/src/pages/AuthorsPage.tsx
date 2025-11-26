@@ -1,14 +1,14 @@
-import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuthors } from '../hooks/useAuthors';
-import LoadingSpinner from '../components/LoadingSpinner';
-import type { Author } from '../types';
+import React, { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuthors } from "../hooks/useAuthors";
+import LoadingSpinner from "../components/LoadingSpinner";
+import type { Author } from "../types";
 
 const AuthorsPage: React.FC = () => {
   const { authors, loading, error } = useAuthors();
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState<'name' | 'books'>('name');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState<"name" | "books">("name");
 
   // Filter and sort authors
   const filteredAndSortedAuthors = useMemo(() => {
@@ -19,10 +19,10 @@ const AuthorsPage: React.FC = () => {
 
     // Sort
     switch (sortBy) {
-      case 'name':
+      case "name":
         filtered.sort((a, b) => a.name.localeCompare(b.name));
         break;
-      case 'books':
+      case "books":
         filtered.sort((a, b) => (b.book_count || 0) - (a.book_count || 0));
         break;
     }
@@ -31,21 +31,21 @@ const AuthorsPage: React.FC = () => {
   }, [authors, searchQuery, sortBy]);
 
   const handleClearFilters = () => {
-    setSearchQuery('');
-    setSortBy('name');
+    setSearchQuery("");
+    setSortBy("name");
   };
 
   // Generate avatar color based on name
   const getAvatarColor = (name: string) => {
     const colors = [
-      'bg-gradient-to-br from-blue-400 to-blue-600',
-      'bg-gradient-to-br from-purple-400 to-purple-600',
-      'bg-gradient-to-br from-pink-400 to-pink-600',
-      'bg-gradient-to-br from-green-400 to-green-600',
-      'bg-gradient-to-br from-yellow-400 to-yellow-600',
-      'bg-gradient-to-br from-red-400 to-red-600',
-      'bg-gradient-to-br from-indigo-400 to-indigo-600',
-      'bg-gradient-to-br from-teal-400 to-teal-600',
+      "bg-gradient-to-br from-blue-400 to-blue-600",
+      "bg-gradient-to-br from-purple-400 to-purple-600",
+      "bg-gradient-to-br from-pink-400 to-pink-600",
+      "bg-gradient-to-br from-green-400 to-green-600",
+      "bg-gradient-to-br from-yellow-400 to-yellow-600",
+      "bg-gradient-to-br from-red-400 to-red-600",
+      "bg-gradient-to-br from-indigo-400 to-indigo-600",
+      "bg-gradient-to-br from-teal-400 to-teal-600",
     ];
     const index = name.charCodeAt(0) % colors.length;
     return colors[index];
@@ -53,7 +53,7 @@ const AuthorsPage: React.FC = () => {
 
   // Get initials from name
   const getInitials = (name: string) => {
-    const words = name.split(' ');
+    const words = name.split(" ");
     if (words.length >= 2) {
       return `${words[0][0]}${words[1][0]}`.toUpperCase();
     }
@@ -99,8 +99,18 @@ const AuthorsPage: React.FC = () => {
             {/* Search */}
             <div className="md:col-span-2 relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <svg
+                  className="h-5 w-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
                 </svg>
               </div>
               <input
@@ -112,11 +122,21 @@ const AuthorsPage: React.FC = () => {
               />
               {searchQuery && (
                 <button
-                  onClick={() => setSearchQuery('')}
+                  onClick={() => setSearchQuery("")}
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
                 >
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    className="h-5 w-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               )}
@@ -126,7 +146,7 @@ const AuthorsPage: React.FC = () => {
             <div>
               <select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as 'name' | 'books')}
+                onChange={(e) => setSortBy(e.target.value as "name" | "books")}
                 className="w-full py-3 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               >
                 <option value="name">Sort by Name (A-Z)</option>
@@ -138,16 +158,33 @@ const AuthorsPage: React.FC = () => {
           {/* Results count and clear filters */}
           <div className="mt-4 flex items-center justify-between">
             <p className="text-sm text-gray-600">
-              Showing <span className="font-semibold text-gray-800">{filteredAndSortedAuthors.length}</span> of{' '}
-              <span className="font-semibold text-gray-800">{authors.length}</span> authors
+              Showing{" "}
+              <span className="font-semibold text-gray-800">
+                {filteredAndSortedAuthors.length}
+              </span>{" "}
+              of{" "}
+              <span className="font-semibold text-gray-800">
+                {authors.length}
+              </span>{" "}
+              authors
             </p>
-            {(searchQuery || sortBy !== 'name') && (
+            {(searchQuery || sortBy !== "name") && (
               <button
                 onClick={handleClearFilters}
                 className="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
                 Clear Filters
               </button>
@@ -159,12 +196,26 @@ const AuthorsPage: React.FC = () => {
         {filteredAndSortedAuthors.length === 0 ? (
           <div className="bg-white rounded-xl shadow-md p-12 text-center">
             <div className="mb-4">
-              <svg className="w-20 h-20 mx-auto text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              <svg
+                className="w-20 h-20 mx-auto text-gray-300"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                />
               </svg>
             </div>
-            <h3 className="text-xl font-semibold text-gray-700 mb-2">No authors found</h3>
-            <p className="text-gray-500 mb-4">Try adjusting your search criteria</p>
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">
+              No authors found
+            </h3>
+            <p className="text-gray-500 mb-4">
+              Try adjusting your search criteria
+            </p>
             <button
               onClick={handleClearFilters}
               className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors"
@@ -183,13 +234,21 @@ const AuthorsPage: React.FC = () => {
                 <div className="p-6 flex flex-col h-full">
                   {/* Avatar */}
                   <div className="flex justify-center mb-4">
-                    <div
-                      className={`w-24 h-24 rounded-full ${getAvatarColor(
-                        author.name
-                      )} flex items-center justify-center text-white text-2xl font-bold shadow-lg group-hover:scale-110 transition-transform duration-300 flex-shrink-0`}
-                    >
-                      {getInitials(author.name)}
-                    </div>
+                    {author.image_url ? (
+                      <img
+                        src={author.image_url}
+                        alt={author.name}
+                        className="w-24 h-24 rounded-full object-cover shadow-lg group-hover:scale-110 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div
+                        className={`w-24 h-24 rounded-full ${getAvatarColor(
+                          author.name
+                        )} flex items-center justify-center text-white text-2xl font-bold shadow-lg group-hover:scale-110 transition-transform duration-300`}
+                      >
+                        {getInitials(author.name)}
+                      </div>
+                    )}
                   </div>
 
                   {/* Author Info */}
@@ -200,7 +259,12 @@ const AuthorsPage: React.FC = () => {
 
                     {/* Books Count */}
                     <div className="flex items-center justify-center gap-2 text-gray-600 mb-4">
-                      <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg
+                        className="w-5 h-5 flex-shrink-0"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -209,7 +273,8 @@ const AuthorsPage: React.FC = () => {
                         />
                       </svg>
                       <span className="text-sm font-medium">
-                        {author.book_count || 0} {author.book_count === 1 ? 'Book' : 'Books'}
+                        {author.book_count || 0}{" "}
+                        {author.book_count === 1 ? "Book" : "Books"}
                       </span>
                     </div>
 
@@ -231,12 +296,17 @@ const AuthorsPage: React.FC = () => {
         {authors.length > 0 && (
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white rounded-xl shadow-md p-6 text-center">
-              <div className="text-4xl font-bold text-blue-600 mb-2">{authors.length}</div>
+              <div className="text-4xl font-bold text-blue-600 mb-2">
+                {authors.length}
+              </div>
               <div className="text-gray-600 font-medium">Total Authors</div>
             </div>
             <div className="bg-white rounded-xl shadow-md p-6 text-center">
               <div className="text-4xl font-bold text-purple-600 mb-2">
-                {authors.reduce((sum, author) => sum + (author.book_count || 0), 0)}
+                {authors.reduce(
+                  (sum, author) => sum + (author.book_count || 0),
+                  0
+                )}
               </div>
               <div className="text-gray-600 font-medium">Total Books</div>
             </div>
@@ -244,7 +314,10 @@ const AuthorsPage: React.FC = () => {
               <div className="text-4xl font-bold text-pink-600 mb-2">
                 {authors.length > 0
                   ? Math.round(
-                      authors.reduce((sum, author) => sum + (author.book_count || 0), 0) / authors.length
+                      authors.reduce(
+                        (sum, author) => sum + (author.book_count || 0),
+                        0
+                      ) / authors.length
                     )
                   : 0}
               </div>
