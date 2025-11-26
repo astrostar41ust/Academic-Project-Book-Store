@@ -1,18 +1,20 @@
-# Stage 1: Use an official Python runtime as a parent image
 FROM python:3.11-slim
 
-# Set the working directory inside the container
-WORKDIR /code
+# ตั้งโฟลเดอร์ทำงานเป็น /app
+WORKDIR /app
 
-# Copy the dependencies file to the working directory
-COPY ./requirements.txt /code/requirements.txt
+# ก๊อปปี้ไฟล์ requirements มาลงก่อน (เพื่อ Cache layer)
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+# ก๊อปปี้ไฟล์โปรเจกต์ทั้งหมด (.) เข้าไปใน Container (.)
+COPY . .
 
-# Copy the rest of the application's code from the host to the container
-COPY ./app /code/app
+# สร้างโฟลเดอร์ instance สำหรับเก็บ Database
+RUN mkdir -p instance
 
-# Command to run the application using uvicorn server
-# 0.0.0.0 makes the server accessible from outside the container within the Docker network
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# เปิด Port 5000
+EXPOSE 5000
+
+# คำสั่งรัน Flask
+CMD ["python", "app.py"]

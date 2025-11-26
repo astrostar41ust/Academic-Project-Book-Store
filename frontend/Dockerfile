@@ -17,7 +17,7 @@ COPY . .
 
 # Build the application for production
 # This will create a 'dist' folder with static assets
-RUN npm run build
+RUN npx vite build
 
 ### STAGE 2: Serve ###
 # Use a lightweight Nginx image to serve the static files
@@ -35,3 +35,4 @@ EXPOSE 80
 
 # The default Nginx command will start the server. No need for a custom CMD.
 
+CMD ["nginx", "-g", "daemon off;"]

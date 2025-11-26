@@ -1,7 +1,9 @@
 version: '3.8'
 
 services:
-  # --- Backend (สร้างจากโฟลเดอร์ backend) ---
+  # -------------------------------------------------------
+  # 1. Backend Service (Flask API)
+  # -------------------------------------------------------
   backend-service:
     build: ./backend
     container_name: bookstore-backend
@@ -10,7 +12,9 @@ services:
     networks:
       - app-network
 
-  # --- Frontend (สร้างจากโฟลเดอร์ frontend) ---
+  # -------------------------------------------------------
+  # 2. Frontend Service (Web ลูกค้า)
+  # -------------------------------------------------------
   frontend-service:
     build: ./frontend
     container_name: bookstore-frontend
@@ -21,14 +25,29 @@ services:
     networks:
       - app-network
 
-  # --- Ngrok (ตัวเดิม) ---
-  ngrok:
+  # -------------------------------------------------------
+  # 3. Admin Service (Web แอดมิน)
+  # -------------------------------------------------------
+  admin-service:
+    build: ./admin
+    container_name: bookstore-admin
+    expose:
+      - "80"
+    depends_on:
+      - backend-service
+    networks:
+      - app-network
+
+  # -------------------------------------------------------
+  # 4. Ngrok ตัวที่ 1 -> สำหรับ Frontend
+  # -------------------------------------------------------
+  ngrok-frontend:
     image: ngrok/ngrok:latest
-    container_name: bookstore-ngrok
+    container_name: ngrok-frontend
     restart: unless-stopped
     command: "http frontend-service:80"
     environment:
-      # ใส่ Token ของคุณเหมือนเดิม
+      # ใส่ Token ใบที่ 1 ตรงนี้
       NGROK_AUTHTOKEN: "35h0pzuoLneA6ekkBHVRGlGjPRX_6svMdpM21LHKeG5sxAhtS"
     ports:
       - "4040:4040"
@@ -36,6 +55,24 @@ services:
       - app-network
     depends_on:
       - frontend-service
+
+  # -------------------------------------------------------
+  # 5. Ngrok ตัวที่ 2 -> สำหรับ Admin
+  # -------------------------------------------------------
+  ngrok-admin:
+    image: ngrok/ngrok:latest
+    container_name: ngrok-admin
+    restart: unless-stopped
+    command: "http admin-service:80"
+    environment:
+      # ใส่ Token ใบที่ 2 ตรงนี้ (ควรใช้คนละใบกับข้างบน)
+      NGROK_AUTHTOKEN: "33CJpzjiUOlfBYQHZZpIEQ05M1h_7C3p5QxYBiwDrhFbtbSvC"
+    ports:
+      - "4041:4040" # เปลี่ยนพอร์ต Monitor เป็น 4041
+    networks:
+      - app-network
+    depends_on:
+      - admin-service
 
 networks:
   app-network:
