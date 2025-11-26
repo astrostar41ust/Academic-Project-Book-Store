@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { motion } from "framer-motion";
-
+import { IoArrowBack } from "react-icons/io5";
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -39,6 +39,15 @@ const LoginPage: React.FC = () => {
 
 "
     >
+      <button
+        onClick={() => navigate("/")}
+        className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 
+             bg-white/20 backdrop-blur-md text-white rounded-full 
+             hover:bg-white/30 transition-all shadow-lg"
+      >
+        <IoArrowBack size={20} />
+        Back
+      </button>
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}

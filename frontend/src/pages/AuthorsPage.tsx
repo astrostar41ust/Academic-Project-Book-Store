@@ -1,8 +1,9 @@
-import React, { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuthors } from "../hooks/useAuthors";
-import LoadingSpinner from "../components/LoadingSpinner";
-import type { Author } from "../types";
+import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuthors } from '../hooks/useAuthors';
+import LoadingSpinner from '../components/LoadingSpinner';
+import Header from '../components/Header';
+
 
 const AuthorsPage: React.FC = () => {
   const { authors, loading, error } = useAuthors();
@@ -62,101 +63,77 @@ const AuthorsPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8 pt-[120px]">
-        <div className="container mx-auto px-4">
-          <LoadingSpinner size="large" className="py-20" />
+      <>
+        <Header
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          sortBy={sortBy}
+          onSortChange={(value) => setSortBy(value as 'name' | 'books')}
+          sortOptions={[
+            { value: 'name', label: 'Sort by Name (A-Z)' },
+            { value: 'books', label: 'Sort by Books Count' },
+          ]}
+          searchPlaceholder="Search authors by name..."
+        />
+        <div className="min-h-screen bg-gray-50 py-8 pt-[120px]">
+          <div className="container mx-auto px-4">
+            <LoadingSpinner size="large" className="py-20" />
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 py-8 pt-[120px]">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-            Error: {error}
+      <>
+        <Header
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          sortBy={sortBy}
+          onSortChange={(value) => setSortBy(value as 'name' | 'books')}
+          sortOptions={[
+            { value: 'name', label: 'Sort by Name (A-Z)' },
+            { value: 'books', label: 'Sort by Books Count' },
+          ]}
+          searchPlaceholder="Search authors by name..."
+        />
+        <div className="min-h-screen bg-gray-50 py-8 pt-[120px]">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+              Error: {error}
+            </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-8 pt-[120px]">
-      <div className="container mx-auto px-4 max-w-7xl">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">Our Authors</h1>
-          <p className="text-gray-600">
-            Discover talented writers and explore their literary works
-          </p>
-        </div>
-
-        {/* Search and Filter Bar */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Search */}
-            <div className="md:col-span-2 relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg
-                  className="h-5 w-5 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </div>
-              <input
-                type="text"
-                placeholder="Search authors by name..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
-                >
-                  <svg
-                    className="h-5 w-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              )}
-            </div>
-
-            {/* Sort */}
-            <div>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as "name" | "books")}
-                className="w-full py-3 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-              >
-                <option value="name">Sort by Name (A-Z)</option>
-                <option value="books">Sort by Books Count</option>
-              </select>
-            </div>
+    <>
+      <Header
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        sortBy={sortBy}
+        onSortChange={(value) => setSortBy(value as 'name' | 'books')}
+        sortOptions={[
+          { value: 'name', label: 'Sort by Name (A-Z)' },
+          { value: 'books', label: 'Sort by Books Count' },
+        ]}
+        searchPlaceholder="Search authors by name..."
+      />
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 py-8 pt-[120px]">
+        <div className="container mx-auto px-4 max-w-7xl">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold text-gray-800 mb-2">Our Authors</h1>
+            <p className="text-gray-600">
+              Discover talented writers and explore their literary works
+            </p>
           </div>
 
-          {/* Results count and clear filters */}
-          <div className="mt-4 flex items-center justify-between">
+          {/* Results Info */}
+          <div className="mb-6 flex items-center justify-between">
             <p className="text-sm text-gray-600">
               Showing{" "}
               <span className="font-semibold text-gray-800">
@@ -190,7 +167,6 @@ const AuthorsPage: React.FC = () => {
               </button>
             )}
           </div>
-        </div>
 
         {/* Authors Grid */}
         {filteredAndSortedAuthors.length === 0 ? (
@@ -326,7 +302,8 @@ const AuthorsPage: React.FC = () => {
           </div>
         )}
       </div>
-    </div>
+</div>
+    </>
   );
 };
 

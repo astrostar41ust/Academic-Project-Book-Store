@@ -8,7 +8,7 @@ class Config:
     
     # --- JWT (JSON Web Token) Configuration ---
     JWT_SECRET_KEY = 'admin_secret_key' 
-    JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(hours=1)
+    JWT_ACCESS_TOKEN_EXPIRES = datetime.timedelta(hours=1, minutes=24)
     
     # General App Secret
     SECRET_KEY = 'admin_secret_key'

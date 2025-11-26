@@ -1,7 +1,5 @@
 import type { ProductItem } from "./product-list-item";
-import type { Book } from "../../types/index";
 
-import { useCart } from "../../context/CartContext";
 
 
 const products: ProductItem[] = [

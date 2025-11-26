@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useBooks } from '../hooks/useBooks';
 import BookCard from '../components/BookCard';
 import LoadingSpinner from '../components/LoadingSpinner';
+import Header from '../components/Header';
 
 type SortOption = 'title' | 'price-asc' | 'price-desc' | 'publication_date' | '';
 
@@ -11,6 +12,8 @@ const BooksPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<SortOption>('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const booksPerPage = 8;
 
   // Filter and sort books
   const filteredAndSortedBooks = useMemo(() => {
@@ -49,80 +52,69 @@ const BooksPage: React.FC = () => {
     return result;
   }, [books, searchQuery, sortBy]);
 
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredAndSortedBooks.length / booksPerPage);
+  const startIndex = (currentPage - 1) * booksPerPage;
+  const endIndex = startIndex + booksPerPage;
+  const currentBooks = filteredAndSortedBooks.slice(startIndex, endIndex);
+
+  // Reset to page 1 when filters change
+  useMemo(() => {
+    setCurrentPage(1);
+  }, [searchQuery, sortBy]);
+
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <LoadingSpinner size="large" className="py-20" />
-      </div>
+      <>
+        <Header 
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          sortBy={sortBy}
+          onSortChange={(value) => setSortBy(value as SortOption)}
+        />
+        <div className="container mx-auto px-4 py-8 pt-[120px]">
+          <LoadingSpinner size="large" className="py-20" />
+        </div>
+      </>
     );
   }
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-          Error: {error}
+      <>
+        <Header 
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          sortBy={sortBy}
+          onSortChange={(value) => setSortBy(value as SortOption)}
+        />
+        <div className="container mx-auto px-4 py-8 pt-[120px]">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            Error: {error}
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 pt-[120px]">
-      <div className="container mx-auto px-4 max-w-7xl">
-        {/* Header Section */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-6">All Books</h1>
-          
-          {/* Search and Filter Bar */}
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <div className="flex flex-col md:flex-row gap-4">
-              {/* Search Bar */}
-              <div className="flex-1 relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                </div>
-                <input
-                  type="text"
-                  placeholder="Search by book title or author..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery('')}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                )}
-              </div>
-
-              {/* Sort Dropdown */}
-              <div className="md:w-64">
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as SortOption)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
-                >
-                  <option value="">Sort by...</option>
-                  <option value="title">Title (A-Z)</option>
-                  <option value="price-asc">Price (Low to High)</option>
-                  <option value="price-desc">Price (High to Low)</option>
-                  <option value="publication_date">Newest First</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Results Count */}
-            <div className="mt-4 flex items-center justify-between text-sm">
+    <>
+      <Header 
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        sortBy={sortBy}
+        onSortChange={(value) => setSortBy(value as SortOption)}
+      />
+      <div className="min-h-screen bg-gray-50 py-8 pt-[120px]">
+        <div className="container mx-auto px-4 max-w-7xl">
+          {/* Header Section */}
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold text-gray-800 mb-4">All Books</h1>
+            
+            {/* Results Info */}
+            <div className="flex items-center justify-between text-sm">
               <p className="text-gray-600">
-                Found <span className="font-semibold text-gray-800">{filteredAndSortedBooks.length}</span> book{filteredAndSortedBooks.length !== 1 ? 's' : ''}
+                Showing <span className="font-semibold text-gray-800">{startIndex + 1}-{Math.min(endIndex, filteredAndSortedBooks.length)}</span> of <span className="font-semibold text-gray-800">{filteredAndSortedBooks.length}</span> book{filteredAndSortedBooks.length !== 1 ? 's' : ''}
                 {searchQuery && (
                   <span className="ml-1">
                     for "<span className="font-semibold text-blue-600">{searchQuery}</span>"
@@ -145,7 +137,6 @@ const BooksPage: React.FC = () => {
               )}
             </div>
           </div>
-        </div>
 
         {/* Books Grid */}
         {filteredAndSortedBooks.length === 0 ? (
@@ -170,18 +161,95 @@ const BooksPage: React.FC = () => {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredAndSortedBooks.map((book) => (
-              <BookCard 
-                key={book.id} 
-                book={book}
-                onClick={() => navigate(`/books/${book.id}`)}
-              />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {currentBooks.map((book) => (
+                <BookCard 
+                  key={book.id} 
+                  book={book}
+                  onClick={() => navigate(`/books/${book.id}`)}
+                />
+              ))}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-12 flex justify-center items-center gap-2">
+                {/* Previous Button */}
+                <button
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                    currentPage === 1
+                      ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                      : 'bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 shadow-md hover:shadow-lg'
+                  }`}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+
+                {/* Page Numbers */}
+                <div className="flex gap-2">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+                    // Show first page, last page, current page, and pages around current
+                    const showPage = 
+                      page === 1 || 
+                      page === totalPages || 
+                      (page >= currentPage - 1 && page <= currentPage + 1);
+                    
+                    const showEllipsis = 
+                      (page === currentPage - 2 && currentPage > 3) ||
+                      (page === currentPage + 2 && currentPage < totalPages - 2);
+
+                    if (showEllipsis) {
+                      return (
+                        <span key={page} className="px-4 py-2 text-gray-400">
+                          ...
+                        </span>
+                      );
+                    }
+
+                    if (!showPage) return null;
+
+                    return (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                          currentPage === page
+                            ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                            : 'bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 shadow-md hover:shadow-lg'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Next Button */}
+                <button
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages}
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                    currentPage === totalPages
+                      ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                      : 'bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 shadow-md hover:shadow-lg'
+                  }`}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            )}
+          </>
         )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

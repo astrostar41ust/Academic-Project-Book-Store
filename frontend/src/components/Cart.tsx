@@ -17,8 +17,7 @@ const Cart: React.FC = () => {
     if (!isAuthenticated) {
       setShowLoginModal(true);
     } else {
-      alert('Proceeding to checkout...');
-      // TODO: Implement actual checkout logic
+      navigate('/checkout');
     }
   };
 

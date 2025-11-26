@@ -6,24 +6,32 @@ import { cn } from "@heroui/react";
 import ProductListItem from "./product-list-item";
 import { useCart } from "../../context/CartContext"; // Import useCart
 import type { Book } from "../../types/index";
-import products from "./products";
 
 export type ProductGridProps = React.HTMLAttributes<HTMLDivElement> & {
   itemClassName?: string;
+};
+type ProductItem = {
+  id: string;
+  name: string;
+  href: string;
+  price: number;
+  color: string;
+  size: string;
+  imageSrc: string;
 };
 
 const ProductsGrid = React.forwardRef<HTMLDivElement, ProductGridProps>(
   ({ itemClassName, className, ...props }, ref) => {
     const { cart } = useCart();
     const products: ProductItem[] =
-      cart?.items?.map((book: Book) => ({
+      (cart as any)?.items?.map((book: Book) => ({
         id: book.id?.toString() ?? "",
         name: book.title ?? "ไม่มีชื่อหนังสือ",
         href: `#/book/${book.id}`,
         price: book.price ?? 0,
         color: "default",
         size: "N/A",
-        imageSrc: book.coverUrl || "/placeholder.png",
+        imageSrc: (book as any).coverUrl || "/placeholder.png",
       })) ?? [];
     return (
       <div

@@ -1,4 +1,3 @@
-import React from "react";
 import {cn} from "@heroui/react";
 
 import ProductsGrid from "./products-grid";

@@ -11,6 +11,11 @@ def list_books():
     books = Book.query.all()
     return jsonify([book.to_dict(include_img_url=True) for book in books]), 200
 
+@book_bp.route('/recommended', methods=['GET'])
+def list_recommended_books():
+    books = Book.query.filter_by(is_recommended=True).all()
+    return jsonify([book.to_dict(include_img_url=True) for book in books]), 200
+
 @book_bp.route('/<int:book_id>', methods=['GET'])
 def get_book(book_id):
     book = db.session.get(Book, book_id)
@@ -50,6 +55,7 @@ def create_book():
         img_url=data.get('img_url'),
         stock_quantity=data.get('stock_quantity', 0),
         publication_date=publication_date,
+        is_recommended=data.get('is_recommended', False),
         authors=authors
     )
     
@@ -78,6 +84,7 @@ def update_book(book_id):
     book.file_url = data.get('file_url', book.file_url)
     book.img_url = data.get('img_url', book.img_url)
     book.stock_quantity = data.get('stock_quantity', book.stock_quantity)
+    book.is_recommended = data.get('is_recommended', book.is_recommended)
     
     # Convert publication_date string to date object
     if 'publication_date' in data:

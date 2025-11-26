@@ -21,6 +21,7 @@ class User(db.Model):
     role_id = db.Column(db.Integer, db.ForeignKey("role.id"), nullable=False)
 
     orders = db.relationship("Order", backref="customer", lazy=True)
+    addresses = db.relationship("Address", backref="user", lazy=True, cascade="all, delete-orphan")
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -37,6 +38,39 @@ class User(db.Model):
                 "id": self.role.id,
                 "name": self.role.name,
             }
+        }
+
+
+class Address(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    label = db.Column(db.String(50), nullable=False)  # e.g., "Home", "Work", "Other"
+    recipient_name = db.Column(db.String(100), nullable=False)
+    phone_number = db.Column(db.String(20), nullable=False)
+    address_line1 = db.Column(db.String(255), nullable=False)
+    address_line2 = db.Column(db.String(255), nullable=True)
+    district = db.Column(db.String(100), nullable=False)  # District
+    sub_district = db.Column(db.String(100), nullable=False)  # Sub-district
+    province = db.Column(db.String(100), nullable=False)  # Province
+    postal_code = db.Column(db.String(10), nullable=False)
+    is_default = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "label": self.label,
+            "recipient_name": self.recipient_name,
+            "phone_number": self.phone_number,
+            "address_line1": self.address_line1,
+            "address_line2": self.address_line2,
+            "district": self.district,
+            "sub_district": self.sub_district,
+            "province": self.province,
+            "postal_code": self.postal_code,
+            "is_default": self.is_default,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
         }
 
 
@@ -77,6 +111,9 @@ class Book(db.Model):
     # Inventory management
     stock_quantity = db.Column(db.Integer, default=0, nullable=False)
     publication_date = db.Column(db.Date, nullable=True)
+    
+    # Recommendation flag
+    is_recommended = db.Column(db.Boolean, default=False, nullable=False)
 
     file_url = db.Column(db.String(512), nullable=True)
     img_url = db.Column(db.String(512), nullable=True)
@@ -93,6 +130,7 @@ class Book(db.Model):
             "price": self.price,
             "stock_quantity": self.stock_quantity,
             "publication_date": self.publication_date.isoformat() if self.publication_date else None,
+            "is_recommended": self.is_recommended,
             "authors": [a.to_dict() for a in self.authors],
         }
         if include_file_url:
