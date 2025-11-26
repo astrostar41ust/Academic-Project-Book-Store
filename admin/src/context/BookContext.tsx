@@ -29,7 +29,7 @@ const BookProvider: React.FC<BookProviderProps> = ({ children }) => {
 
   const getBooks = async (): Promise<void> => {
     try {
-      const response = await fetch("http://127.0.0.1:5000/api/books/");
+      const response = await fetch("/api/books/");
       if (!response.ok) throw new Error("Failed to fetch books");
 
       const data: Book[] = await response.json();

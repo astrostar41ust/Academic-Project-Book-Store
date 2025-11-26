@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { Book, Author, User, AuthResponse } from "../types";
 
-const API_BASE_URL = "/api";
+const API_BASE_URL = '/api';
 
 // Create axios instance
 const api = axios.create({
