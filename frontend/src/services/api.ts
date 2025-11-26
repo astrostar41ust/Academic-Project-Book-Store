@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { Book, Author, User, AuthResponse, Address } from '../types';
 
-const API_BASE_URL = 'http://127.0.0.1:5000/api';
+const API_BASE_URL = '/api';
 
 // Create axios instance
 const api = axios.create({
