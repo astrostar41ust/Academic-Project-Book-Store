@@ -2,34 +2,83 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBooks } from '../hooks/useBooks';
 import { booksAPI } from '../services/api';
-// import BookCard from '../components/BookCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 import RecommendedBooksCarousel from '../components/RecommendedBooksCarousel';
 import type { Book } from '../types';
+import img1 from '../assets/image/1.jpg';
+import img2 from '../assets/image/2.jpg';
+import img3 from '../assets/image/3.jpg';
+import img4 from '../assets/image/4.jpg';
+import img5 from '../assets/image/5.jpg';
+import img6 from '../assets/image/6.jpg';
+import img7 from '../assets/image/7.jpg';
+import img8 from '../assets/image/8.jpg';
+import img9 from '../assets/image/9.jpg';
 
+// Banner Images
 const bannerImages = [
-  {
-    src: "https://img.freepik.com/free-vector/hand-drawn-literature-facebook-cover_23-2149721058.jpg?semt=ais_hybrid&w=740&q=80",
-    alt: "New Books Up to 27% Off",
-  },
-  {
-    src: "https://i.imgur.com/3yQF1bC.jpg",
-    alt: "Best Selling Book Promotions",
-  },
-  {
-    src: "https://i.imgur.com/6QK8QkT.jpg",
-    alt: "Book Fair ลดพิเศษ",
-  },
+  { src: img1, alt: "Banner 1" },
+  { src: img2, alt: "Banner 2" },
+  { src: img3, alt: "Banner 3" },
 ];
 
+const topPromotions = [
+  { id: 1, src: img1 , alt: "รวมโปรโมชั่น" },
+  { id: 2, src: img2 , alt: "ส่งฟรีทั่วประเทศ" },
+  { id: 3, src: img3 , alt: "ลดสูงสุด 50%" },
+  { id: 4, src: img4 , alt: "ช้อปครบรับเพิ่ม" },
+  { id: 5, src: img5 , alt: "หนังสือใหม่" },
+  { id: 6, src: img6 , alt: "หนังสือแนะนำ" },
+];
+
+const bottomPromotions = [
+  { id: 1, src: img7, alt: "หนังสือขายดี" },
+  { id: 2, src: img8, alt: "หนังสือมือสอง" },
+  { id: 3, src: img9, alt: "หนังสือเรียน" },
+];
+
+// --- ICONS ---
+
+// 1. Arrow Right Icon
+const ArrowRightIcon = () => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    fill="none" 
+    viewBox="0 0 24 24" 
+    strokeWidth={2} 
+    stroke="currentColor" 
+    className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"
+  >
+    <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+  </svg>
+);
+
+// 2. Star Icon (Solid)
+const StarIcon = () => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    viewBox="0 0 24 24" 
+    fill="currentColor" 
+    className="w-6 h-6 text-yellow-400" 
+  >
+    <path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" />
+  </svg>
+);
+
 const HomePage: React.FC = () => {
-  const {  loading, error } = useBooks();
+  const { loading, error } = useBooks();
   const [bannerIndex, setBannerIndex] = useState(0);
+  
   const [recommendedBooks, setRecommendedBooks] = useState<Book[]>([]);
-  const [loadingRecommended, setLoadingRecommended] = useState(true);
+  const [newArrivalBooks, setNewArrivalBooks] = useState<Book[]>([]); 
+  const [loadingData, setLoadingData] = useState(true);
+  
   const navigate = useNavigate();
 
-  // Auto-slide effect
+  const handleDotClick = (index: number) => {
+    setBannerIndex(index);
+  };
+
   useEffect(() => {
     const interval = setInterval(() => {
       setBannerIndex((prev) => (prev === bannerImages.length - 1 ? 0 : prev + 1));
@@ -37,99 +86,140 @@ const HomePage: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Fetch recommended books
   useEffect(() => {
-    const fetchRecommended = async () => {
+    const fetchData = async () => {
       try {
-        setLoadingRecommended(true);
-        const data = await booksAPI.getRecommended();
-        setRecommendedBooks(data);
+        setLoadingData(true);
+        const [recData, newData] = await Promise.all([
+            booksAPI.getRecommended(),
+            booksAPI.getAll()
+        ]);
+        setRecommendedBooks(recData);
+        const recommendedIds = new Set(recData.map(book => book.id));
+        const filteredNewBooks = newData.filter(book => !recommendedIds.has(book.id));
+        setNewArrivalBooks(filteredNewBooks);
       } catch (err) {
-        console.error('Failed to fetch recommended books:', err);
+        console.error('Failed to fetch books:', err);
       } finally {
-        setLoadingRecommended(false);
+        setLoadingData(false);
       }
     };
-
-    fetchRecommended();
+    fetchData();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <LoadingSpinner size="large" className="py-20" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-          Error: {error}
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <LoadingSpinner size="large" className="py-20" />;
+  if (error) return <div className="text-red-500 text-center py-10">Error: {error}</div>;
 
   return (
     <>
-      {/* 100px */}
       <div className="pt-[150px]">
-
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">Welcome to BookStore</h1>
         </div>
 
-        {/* ✅ Banner Carousel */}
-        <div className="mb-10 relative left-1/2 right-1/2 -translate-x-1/2 w-screen max-w-none flex items-center justify-center">
-          <img
-            src={bannerImages[bannerIndex].src}
-            alt={bannerImages[bannerIndex].alt}
-            className="w-full object-cover"
-            style={{ maxHeight: 320, height: 320 }}
-          />
-          {/* Dots indicator */}
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
-            {bannerImages.map((_, idx) => (
-              <span
-                key={idx}
-                className={`block w-2 h-2 rounded-full ${idx === bannerIndex ? 'bg-blue-500' : 'bg-gray-300'}`}
-              />
-            ))}
+        {/* MAIN BANNER */}
+        <div className="mb-10 container mx-auto px-4">
+          <div className="relative w-full h-[250px] md:h-[400px] lg:h-[500px] rounded-2xl overflow-hidden shadow-xl bg-gray-200 group">
+            <img
+              src={bannerImages[bannerIndex].src}
+              alt={bannerImages[bannerIndex].alt}
+              className="w-full h-full object-cover transition-opacity duration-500"
+              onError={(e) => { e.currentTarget.src = "https://via.placeholder.com/1500x550?text=Main+Banner"; }}
+            />
+            
+            <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
+              {bannerImages.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleDotClick(index)}
+                  className={`
+                    h-2.5 rounded-full transition-all duration-300 shadow-sm
+                    ${bannerIndex === index 
+                      ? "w-8 bg-white opacity-100" 
+                      : "w-2.5 bg-white/60 hover:bg-white/90 hover:scale-110"
+                    }
+                  `}
+                  aria-label={`Go to slide ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* ✅ Recommended Books Section */}
         <div className="container mx-auto px-4 py-8">
-          {!loadingRecommended && recommendedBooks.length > 0 && (
-            <section className="mb-12">
+          
+          {/* 1. RECOMMENDED SECTION */}
+          {!loadingData && recommendedBooks.length > 0 && (
+            <section className="mb-16">
               <div className="flex items-center justify-between mb-6">
-                <div>
-                  <h2 className="text-3xl font-bold text-gray-800 mb-2 relative inline-block">
-                    <span className="flex items-center gap-2">
-                      <svg className="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                      Recommended 
-                    </span>
-                    <span className="absolute left-0 -bottom-1 w-full h-[3px] bg-gradient-to-r from-blue-500 to-indigo-600 rounded"></span>
-                  </h2>
-                  <p className="text-gray-600 mt-2">Curated just for you</p>
-                </div>
-                <button
-                  onClick={() => navigate('/books')}
-                  className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1 transition-colors"
-                >
-                  View All
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
+                 {/* Blue Accent Line + Star */}
+                 <h2 className="text-2xl font-bold text-gray-800 border-l-4 border-blue-600 pl-4 flex items-center gap-2">
+                    Recommended
+                    <StarIcon />
+                 </h2>
+                 <button 
+                    onClick={() => navigate('/books')} 
+                    className="text-blue-600 flex items-center gap-2 group font-medium hover:text-blue-700 transition-colors"
+                  >
+                    View All
+                    <ArrowRightIcon />
+                 </button>
               </div>
               <RecommendedBooksCarousel books={recommendedBooks} />
             </section>
           )}
+
+          {/* PROMOTION SECTION */}
+           <section className="mb-16 py-8 border-t border-b border-gray-100">
+            {/* ✅ แก้ไข: เพิ่ม border-l-4 (สีส้ม) และ pl-4 ให้โปรโมชั่น */}
+            <h2 className="text-2xl font-bold text-gray-800 mb-6 border-l-4 border-orange-500 pl-4">
+              โปรโมชั่น
+            </h2>
+            
+            <div className="flex overflow-x-auto gap-4 pb-6 snap-x scrollbar-hide" style={{ scrollBehavior: 'smooth' }}>
+              {topPromotions.map((promo) => (
+                <div 
+                  key={promo.id} 
+                  className="w-40 h-40 md:w-60 md:h-60 flex-shrink-0 snap-center transition-transform hover:scale-105 relative rounded-2xl shadow-md overflow-hidden"
+                >
+                  <img src={promo.src} alt={promo.alt} className="w-full h-full object-cover" />
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+              {bottomPromotions.map((promo) => (
+                <div key={promo.id} className="relative group overflow-hidden rounded-2xl shadow-md hover:shadow-xl transition-all h-48 md:h-64">
+                    <img 
+                    src={promo.src} 
+                    alt={promo.alt} 
+                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* 2. NEW ARRIVALS SECTION */}
+          {!loadingData && newArrivalBooks.length > 0 && (
+             <section className="mb-12">
+               <div className="flex items-center justify-between mb-6">
+                  {/* Emerald Accent Line */}
+                  <h2 className="text-2xl font-bold text-gray-800 border-l-4 border-emerald-500 pl-4">
+                    New Arrivals
+                  </h2>
+                  <button 
+                    onClick={() => navigate('/books?sort=newest')} 
+                    className="text-emerald-600 flex items-center gap-2 group font-medium hover:text-emerald-700 transition-colors"
+                  >
+                    View All
+                    <ArrowRightIcon />
+                  </button>
+               </div>
+               <RecommendedBooksCarousel books={newArrivalBooks} />
+             </section>
+          )}
+
         </div>
       </div>
     </>
